@@ -6,18 +6,22 @@ public class Coche implements CajaCambios, Motor, Llantas {
     private static int marchaMaxima;
     private boolean encendido;
     private float cantidadCombustibleLts;
-    private boolean ponchado; 
+    private boolean ponchado;
 
     public Coche(int velocidades, int marchaMaxima, boolean encendido, float cantidadCombustibleLts) {
         this.velocidades = velocidades;
         this.marchaMaxima = marchaMaxima;
         this.encendido = encendido;
         this.cantidadCombustibleLts = cantidadCombustibleLts;
-        this.ponchado = false; 
+        this.ponchado = false;
     }
 
     @Override
     public void cambioMarcha(int direccion) {
+        if (!encendido) {
+            System.out.println("¡Motor apagado! Enciéndelo primero.");
+        }
+
         if (direccion == 1 || direccion == -1) {
             velocidades += direccion;
             
@@ -35,12 +39,12 @@ public class Coche implements CajaCambios, Motor, Llantas {
 
     @Override
     public void subirMarcha() {
-        cambioMarcha(1);  
+        cambioMarcha(1); 
     }
 
     @Override
     public void bajarMarcha() {
-        cambioMarcha(-1);  
+        cambioMarcha(-1); 
     }
 
     @Override
@@ -62,33 +66,42 @@ public class Coche implements CajaCambios, Motor, Llantas {
 
     @Override
     public void combustion() {
-        if (encendido) {
-            cantidadCombustibleLts -= 0.05f;
-            System.out.println("Combustible restante: " + cantidadCombustibleLts + "L");
-        }
+        cantidadCombustibleLts -= 0.05f;
+        System.out.println("Combustible restante: " + cantidadCombustibleLts + "L");
     }
 
     @Override
     public void acelerar() {
-        if (encendido) {
-            combustion();
-            combustion(); 
-            System.out.println("Acelerando...");
+        if (!encendido) {
+            System.out.println("¡Motor apagado! Enciéndelo primero.");
+            return;
         }
+        combustion();
+        combustion();
+        System.out.println("Acelerando...");
     }
 
     @Override
     public void rodarEnfrenteAtras(int direccion, int rpm) {
-        if (!ponchado) {
-            String sentido = (direccion == 1) ? "adelante" : "atrás";
-            System.out.println("Rodando " + sentido + " a " + rpm + " RPM");
-        } else {
+        if (!encendido) {
+            System.out.println("¡Motor apagado! Enciéndelo primero.");
+            return;
+        }
+
+        if (ponchado) {
             System.out.println("¡Llanta ponchada! No puede rodar");
         }
+
+        String sentido = (direccion == 1) ? "adelante" : "atrás";
+        System.out.println("Rodando " + sentido + " (" + rpm + " RPM)");
     }
 
     @Override
     public void rotarDerechaIzquierda(int grados) {
+        if (!encendido) {
+            System.out.println("¡Motor apagado! Enciéndelo primero.");
+        }
+
         String direccion = (grados > 0) ? "derecha" : "izquierda";
         System.out.println("Girando " + Math.abs(grados) + "° a la " + direccion);
     }
