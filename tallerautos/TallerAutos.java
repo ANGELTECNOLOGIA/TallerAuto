@@ -53,7 +53,6 @@ public class TallerAutos {
                     if (eleccion != 0) System.out.println("Opción inválida!");
             }
         }
-        System.out.println("Programa terminado.");
         sc.close();
     }
 }
